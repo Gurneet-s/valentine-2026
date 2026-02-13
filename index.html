@@ -153,28 +153,42 @@
             const noBtn = document.getElementById('noBtn');
             const yesBtn = document.getElementById('yesBtn');
 
-            // 1. Update text from sequence
             if (noCount < noTexts.length) {
                 noBtn.innerText = noTexts[noCount];
             }
 
-            // 2. Scale the YES button
             const scale = 1 + (noCount * 0.25);
             yesBtn.style.transform = `scale(${scale})`;
 
-            // 3. Move NO button to random position
             const padding = 50;
-            const maxX = window.innerWidth - noBtn.offsetWidth - padding;
-            const maxY = window.innerHeight - noBtn.offsetHeight - padding;
-            
-            const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
-            const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
+            let randomX, randomY;
+            let overlap = true;
+
+            // Collision detection loop: ensure No button doesn't land on Yes button
+            while (overlap) {
+                const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+                const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+                randomX = Math.max(padding, Math.floor(Math.random() * maxX));
+                randomY = Math.max(padding, Math.floor(Math.random() * maxY));
+
+                const yesRect = yesBtn.getBoundingClientRect();
+                const buffer = 20; // Extra space around Yes button
+
+                // Check if the random coordinates are inside the Yes button area
+                if (
+                    randomX + noBtn.offsetWidth < yesRect.left - buffer ||
+                    randomX > yesRect.right + buffer ||
+                    randomY + noBtn.offsetHeight < yesRect.top - buffer ||
+                    randomY > yesRect.bottom + buffer
+                ) {
+                    overlap = false;
+                }
+            }
 
             noBtn.style.position = 'fixed';
             noBtn.style.left = randomX + 'px';
             noBtn.style.top = randomY + 'px';
 
-            // 4. Move YES button too after many clicks
             if (noCount > 15) {
                 yesBtn.style.position = 'fixed';
                 yesBtn.style.left = Math.max(padding, Math.floor(Math.random() * (window.innerWidth - 150))) + 'px';
