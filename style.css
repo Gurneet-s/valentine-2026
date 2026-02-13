@@ -1,0 +1,9 @@
+.photo-frame {
+    display: inline-block;
+    padding: 10px;
+    background: white;
+    box-shadow: 0 10px 25px rgba(154, 1, 1, 0.2);
+    border-radius: 20px;
+    transform: rotate(-2deg); /* Gives it a cute scrapbooked look */
+    margin-bottom: 20px;
+}
